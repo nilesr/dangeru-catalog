@@ -94,7 +94,7 @@ var xhr_and_key = (function xhr_and_key(board, a, id, key, oldreplies, closed, e
 					GM_setValue(closedkey, replies);
 				}
 			} catch (e) {
-				elem.innerHTML = "Error.";
+				elem.innerHTML = red("Error");
 				console.log(e);
 			}
 		}
