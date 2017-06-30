@@ -1,0 +1,14 @@
+digraph test {
+	splines=true;
+	overlap=false;
+	graph [overlap = false];
+	"closed?" -> "closed?" [label="start here"]
+	"closed?" -> "xhr and key" [label="no"]
+	"closed?" -> "have closedkey?" [label="yes"]
+	"xhr and key" -> "closed? (2)"
+	"closed? (2)" -> "store closedkey" [label="yes"]
+	"store closedkey" -> "comparison and update elem"
+	"closed? (2)" -> "comparison and update elem" [label="no"]
+	"have closedkey?" -> "xhr and key" [label="no"]
+	"have closedkey?" -> "comparison and update elem" [label="yes"]
+}
