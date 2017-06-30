@@ -34,20 +34,49 @@ var onload = function () {
 		var saved_title = GM_getValue(titlekey, id);
 
 		if (a.innerHTML.trim().length === 0) {
-			a.innerHTML = "<span style='color: grey;'>Thread " + saved_title + " deleted</span>";
+			a.innerHTML = grey("Thread " + saved_title + " deleted");
 			continue;
 		}
 		GM_setValue(titlekey, a.innerHTML.trim());
-		the_fn(board, a, id);
+
+		var elem = document.createElement("span");
+		a.appendChild(elem);
+		elem.innerHTML = "Loading...";
+
+		var key = board + ":" + id;
+		var oldreplies = GM_getValue(key, 0);
+		var closed = false;
+		if (a.style.color.trim().length > 0) {
+			// post is closed.
+			closed = true;
+		}
+		var closedkey = key + ":closed_replies";
+		if (!closed) {
+			xhr_and_key(board, a, id, key, oldreplies, closed, elem, closedkey);
+		} else {
+			var closedreplies = GM_getValue(closedkey, "no");
+			if (closedreplies === "no") {
+				xhr_and_key(board, a, id, key, oldreplies, closed, elem, closedkey);
+			} else {
+				comparison_and_update_elem(key, closedreplies, a, elem, closed, oldreplies);
+				//elem.innerHTML = elem.innerHTML + " (cached)"; // debug
+			}
+		}
 	}
 
 };
 
-var the_fn = (function the_fn(board, a, id) {
+var grey = function grey(text) {
+	return color("grey", text);
+};
+var red = function red(text) {
+	return color("red", text);
+};
+var color = function color(c, text) {
+	return "<span style='color: " + c + ";'>" + text + "</span>";
+};
 
-	var elem = document.createElement("span");
-	a.appendChild(elem);
-	elem.innerHTML = "Loading...";
+var xhr_and_key = (function xhr_and_key(board, a, id, key, oldreplies, closed, elem, closedkey) {
 
 	var xmlHttp = new XMLHttpRequest();
 	xmlHttp.onreadystatechange = function() {
@@ -57,19 +86,13 @@ var the_fn = (function the_fn(board, a, id) {
 			var idx = jsontext.indexOf("https://boards.dangeru.us/static");
 			while (jsontext[idx] != '}') idx++;
 			var b = jsontext.slice(0, idx) + '"' + jsontext.slice(idx);
-			var key = board + ":" + id;
-			var oldreplies = GM_getValue(key, 0);
 			try {
 				var json = JSON.parse(b);
 				var replies = json.replies.length;
-				if (oldreplies < replies) {
-					elem.innerHTML = "<span style='color:red;'>+" + (replies - oldreplies) + "</span>";
-					// we have to wrap this in a closure because otherwise it clicking any post would only update the last post processed in this loop
-					the_other_fn(key, replies, a, elem);
-				} else {
-					elem.innerHTML = "<span style='color: grey;'>" + replies + "</span>";
+				comparison_and_update_elem(key, replies, a, elem, closed, oldreplies);
+				if (closed) {
+					GM_setValue(closedkey, replies);
 				}
-
 			} catch (e) {
 				elem.innerHTML = "Error.";
 				console.log(e);
@@ -80,12 +103,22 @@ var the_fn = (function the_fn(board, a, id) {
 	xmlHttp.send(null);
 });
 
-var the_other_fn = (function(key, replies, a, elem) {
+var comparison_and_update_elem = function(key, replies, a, elem, closed, oldreplies) {
+	if (oldreplies < replies) {
+		elem.innerHTML = red("+" + (replies - oldreplies));
+		// we have to wrap this in a closure because otherwise it clicking any post would only update the last post processed in this loop
+		set_onclick_listener(key, replies, a, elem, closed);
+	} else {
+		elem.innerHTML = grey(replies);
+	}
+};
+
+var set_onclick_listener = function set_onclick_listener(key, replies, a, elem, closed) {
 	a.addEventListener("click", function() {
 		GM_setValue(key, replies);
-		elem.innerHTML = "<span style='color: grey;'>" + replies + "</span>";
+		elem.innerHTML = grey(replies);
 	});
-});
+};
 
 
 // In chrome, the userscript runs in a sandbox, and will never see these events
