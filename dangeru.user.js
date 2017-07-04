@@ -60,6 +60,7 @@ var onload = function () {
 			} else {
 				comparison_and_update_elem(key, closedreplies, a, elem, closed, oldreplies);
 				//elem.innerHTML = elem.innerHTML + " (cached)"; // debug
+				//elem.innerHTML = elem.innerHTML + grey("(c)");
 			}
 		}
 	}
@@ -83,9 +84,11 @@ var xhr_and_key = (function xhr_and_key(board, a, id, key, oldreplies, closed, e
 		if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
 			var jsontext = xmlHttp.responseText;
 			jsontext = jsontext.replace(/(?:\r\n|\r|\n)/g, " ");
-			var idx = jsontext.indexOf("https://boards.dangeru.us/static");
-			while (jsontext[idx] != '}') idx++;
-			var b = jsontext.slice(0, idx) + '"' + jsontext.slice(idx);
+			// Workaround no longer needed after the api got fixed
+			//var idx = jsontext.indexOf("https://boards.dangeru.us/static");
+			//while (jsontext[idx] != '}') idx++;
+			//var b = jsontext.slice(0, idx) + '"' + jsontext.slice(idx);
+			var b = jsontext;
 			try {
 				var json = JSON.parse(b);
 				var replies = json.replies.length;
