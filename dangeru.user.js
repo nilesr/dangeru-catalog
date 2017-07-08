@@ -98,6 +98,11 @@ var xhr_and_key = (function xhr_and_key(board, a, id, key, oldreplies, closed, e
 				}
 			} catch (e) {
 				elem.innerHTML = red("Error");
+				(function(elem) {
+					elem.addEventListener("click", function() {
+						elem.innerHTML = grey("Error");
+					});
+				})(elem);
 				console.log(e);
 			}
 		}
