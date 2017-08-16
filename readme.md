@@ -11,3 +11,16 @@ It will also show deleted posts, and if you had seen the post before it was dele
 PREFETCHER NOTICED ME
 
 ![](discord.png)
+
+
+## How to install on chrome
+
+Step 1 - Install greasemonkey from the chrome web store [here](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
+
+Step 2 - Click [here](https://github.com/nilesr/dangeru-catalog/raw/master/dangeru.user.js)
+
+Step 3 - Click install on this screen:
+
+![](installss.png)
+
+Step 4 - Go to [https://boards.dangeru.us/lain](boards.dangeru.us/lain) and make sure it works
