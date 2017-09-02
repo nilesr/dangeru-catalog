@@ -1,3 +1,5 @@
+# This repository is deprecated, you're looking for [awoo-catalog](https://github.com/nilesr/awoo-catalog)
+
 ## Small userscript to browse danger/u/ more efficiently, based on lainmod
 
 It keeps track of how many replies a post has, and shows the number of new replies in red when there are new ones. It marks a post as fully read when you click on it in the list.
