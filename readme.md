@@ -26,3 +26,11 @@ Step 3 - Click install on this screen:
 ![](installss.png)
 
 Step 4 - Go to [https://boards.dangeru.us/lain](boards.dangeru.us/lain) and make sure it works
+
+## Caching algorithm
+
+To reduce bandwidth as much as possible, the extension will not query threads that are closed if they've been seen before
+
+The algorithm works like this
+
+![](graph.svg)
